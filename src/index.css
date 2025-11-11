@@ -1,0 +1,11 @@
+@font-face {
+  font-family: "BreathOfTheRiver";
+  src: url("./DattacleBlack_PERSONAL_USE_ONLY.otf") format("opentype");
+}
+.BreathOfTheRiver {
+  font-family: "BreathOfTheRiver";
+}
+* {
+  user-select: none;
+  font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
