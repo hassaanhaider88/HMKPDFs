@@ -11,5 +11,63 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    
+<!-- Paste This Code Into Your Route .html File -->
+<script>
+(function () {
+  const API = "https://web-tracking-backend.onrender.com/api/track";
+  const API_KEY = "8f8f5bfb670e59f88b00b4bcd692c16429dffb6317ea2f9c97d4f47ab43b37da";
+
+  let hasPinged = false;
+
+  function sendPing() {
+    // block duplicates by page load
+    if (hasPinged) return;
+    hasPinged = true;
+
+    // block duplicates per tab
+    if (sessionStorage.getItem("hasPinged") === "true") return;
+    sessionStorage.setItem("hasPinged", "true");
+    function getOrCreateUserId() {
+    let id = localStorage.getItem("uniqueUserId");
+    if (!id) {
+      id = crypto.randomUUID();
+      localStorage.setItem("uniqueUserId", id);
+    }
+    return id;
+  }
+    const userId = getOrCreateUserId();
+    const payload = {
+      apiKey: API_KEY,
+      userId,
+      url: location.href,
+      path: location.pathname + location.search,
+      referrer: document.referrer || null,
+      timestamp: Date.now(),
+      client: {
+        ua: navigator.userAgent,
+        platform: navigator.platform,
+        language: navigator.language,
+        screen: { width: screen.width, height: screen.height }
+      }
+    };
+
+    fetch(API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    }).catch(console.error);
+  }
+
+  // Run only once
+  if (document.readyState === "complete" || document.readyState === "interactive") {
+    sendPing();
+  } else {
+    document.addEventListener("DOMContentLoaded", sendPing, { once: true });
+  }
+
+})();
+</script>
+
   </body>
 </html>
